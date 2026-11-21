@@ -28,3 +28,13 @@ MatriCore/
 ├── ui_reportes.py                         # Módulo de visualización de los 10 reportes
 ├── requirements.txt                       # Dependencias externas de Python
 └── README.md                              # Documentación técnica del repositorio
+
+# INSTALACION
+Ejecutar los scripts de la carpeta sql/ en PostgreSQL en el siguiente orden:
+
+CREACION DE BD Y TABLAS.sql
+INSERCION REGISTROS.sql
+SCRIPTS SQL DE SEGURIDAD.sql
+
+Ejecutar MatriCore_Setup.exe y seguir el asistente de instalación.
+Abrir la aplicación desde el acceso directo MatriCore generado en el Escritorio.
