@@ -32,8 +32,8 @@ MatriCore/
 # INSTALACION
 Ejecutar los scripts de la carpeta sql/ en PostgreSQL en el siguiente orden:
 
-CREACION DE BD Y TABLAS.sql\n
-SCRIPTS SQL DE SEGURIDAD.sql\n
+CREACION DE BD Y TABLAS.sql ->
+SCRIPTS SQL DE SEGURIDAD.sql ->
 INSERCION REGISTROS.sql
 
 Ejecutar MatriCore_Setup.exe y seguir el asistente de instalación.
