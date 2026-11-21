@@ -1,4 +1,5 @@
-import psycopg2
+from __future__ import annotations
+import psycopg
 from datetime import date
 import random
 from config import DB_BASE, APODERADO_DB_USER, APODERADO_DB_PASS
@@ -11,7 +12,7 @@ class DatabaseManager:
         config = DB_BASE.copy()
         config['user'] = usuario_db
         config['password'] = password_db
-        return psycopg2.connect(**config)
+        return psycopg.connect(**config)
 
     @classmethod
     def autenticar_secretaria(cls, password: str) -> tuple[bool, str]:
@@ -19,7 +20,7 @@ class DatabaseManager:
             conn = cls.conectar("rol_secretaria", password)
             conn.close()
             return True, "Sesión iniciada con privilegios completos de Secretaría."
-        except psycopg2.OperationalError as e:
+        except psycopg.OperationalError as e:
             msg = e.pgerror if e.pgerror else "Credenciales incorrectas o rol no configurado en PostgreSQL."
             return False, f"PostgreSQL rechazó el acceso:\n{msg}"
         except Exception as e:
@@ -29,7 +30,7 @@ class DatabaseManager:
     def autenticar_apoderado(cls, dni_apod: str) -> tuple[bool, str]:
         try:
             conn = cls.conectar(APODERADO_DB_USER, APODERADO_DB_PASS)
-        except psycopg2.OperationalError as e:
+        except psycopg.OperationalError as e:
             msg = e.pgerror if e.pgerror else "Fallo de autenticación con rol_apoderado en PostgreSQL."
             return False, f"Error de conexión:\n{msg}"
         except Exception as e:

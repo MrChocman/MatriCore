@@ -1,28 +1,25 @@
 # MatriCore - Sistema de Gestión de Matrícula
 
-Aplicación cliente de escritorio desarrollada en **Python (Tkinter + psycopg2)** conectada directamente a **PostgreSQL**, diseñada para gestionar el flujo de matrícula escolar bajo un esquema normalizado en **3FN**, control de acceso basado en roles (**RBAC**), transacciones **ACID**, **borrado lógico**, **triggers** de auditoría automática y un módulo de **10 reportes institucionales** encapsulados en funciones almacenadas.
+Aplicación cliente de escritorio desarrollada en Python (Tkinter + psycopg) conectada directamente a PostgreSQL, diseñada para gestionar el flujo de matrícula escolar bajo un esquema normalizado en 3FN, control de acceso basado en roles (RBAC), transacciones ACID, borrado lógico, triggers de auditoría automática y un módulo de 10 reportes institucionales encapsulados en funciones almacenadas.
 
 # Características Principales
 
-* Arquitectura Nativa sin Frameworks: Comunicación directa mediante el controlador `psycopg2` invocando procedimientos almacenados (`CALL`) y funciones tabulares (`SELECT * FROM fn_...`) en PostgreSQL.
-
+* Arquitectura Nativa sin Frameworks:Comunicación directa mediante el controlador `psycopg` (Psycopg 3) invocando procedimientos almacenados (`CALL`) y funciones tabulares (`SELECT * FROM fn_...`) en PostgreSQL.
 * Seguridad y Roles Nativos (RBAC):
   * `rol_apoderado`: Acceso restringido bajo el principio de mínimo privilegio; visualiza únicamente el historial de sus hijos vinculados y registra solicitudes validando pagos conciliados (`Pagado`).
   * `rol_secretaria`: Control operativo completo para filtrar expedientes, aprobar matrículas (`UPDATE`), ejecutar anulaciones mediante borrado lógico (`Anulado`) y consultar reportes institucionales.
-
 * Integridad Transaccional (ACID) y Automatización:
   * `sp_registrar_matricula`: Valida en servidor la existencia y estado conciliado del voucher en `PAGO_MATRICULA` antes de insertar.
   * `sp_actualizar_matricula` y `sp_eliminar_matricula`: Encapsulan la modificación de estado y el borrado lógico (`Estado_matri = 'Anulado'`) preservando el historial.
-  * Triggers automáticos: `trg_auditoria_matricula` registra cada movimiento en `AUDITORIA_MATRICULA`, y `trg_generar_autorizacion_inicial` crea automáticamente la autorización legal vinculada al expediente.
+  * Triggers automáticos:`trg_auditoria_matricula` registra cada movimiento en `AUDITORIA_MATRICULA`, y `trg_generar_autorizacion_inicial` crea automáticamente la autorización legal vinculada al expediente.
 * Módulo de Reportes (10 Consultas): Incluye 7 consultas relacionales multi-tabla (`JOIN`) y 3 reportes estadísticos/auditoría ejecutados desde funciones almacenadas.
 
 # Estructura del Proyecto
-
 MatriCore/
 ├── sql/
-│   ├── 01_creacion_bd_tablas.sql          # Esquema relacional en 3FN (15 tablas)
-│   ├── 02_insercion_datos_coherentes.sql  # Carga inicial de 30 registros coherentes
-│   └── 03_seguridad_rbac_acid.sql         # Roles RBAC, Triggers, SPs CRUD y 10 Reportes
+│   ├── CREACION DE BD Y TABLAS.sql        # Esquema relacional en 3FN (15 tablas)
+│   ├── INSERCION REGISTROS.sql            # Carga inicial de registros coherentes
+│   └── SCRIPTS SQL DE SEGURIDAD.sql       # Roles RBAC, Triggers, SPs CRUD y 10 Reportes
 ├── config.py                              # Parámetros de conexión y constantes visuales
 ├── database.py                            # Capa de acceso a datos (DAO) hacia PostgreSQL
 ├── main.py                                # Punto de entrada y orquestador de vistas

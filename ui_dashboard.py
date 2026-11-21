@@ -1,6 +1,6 @@
 import tkinter as tk
 from tkinter import messagebox, ttk
-import psycopg2
+import psycopg
 from config import (
     GRADOS_COLEGIO, ESTADOS_MATRICULA, COLOR_BG,
     COLOR_INFO, COLOR_WARNING, COLOR_DANGER, COLOR_MUTED, COLOR_SUCCESS, COLOR_SECONDARY
@@ -206,7 +206,7 @@ class DashboardView(ttk.Frame):
                 )
                 vent.destroy()
                 self.cargar_datos()
-            except psycopg2.Error as e:
+            except psycopg.Error as e:
                 messagebox.showerror("Error de Integridad / BD", f"No se pudo completar la transacción:\n{e.pgerror}")
 
         btn_procesar = tk.Button(
@@ -277,7 +277,7 @@ class DashboardView(ttk.Frame):
                 )
                 vent_edit.destroy()
                 self.cargar_datos()
-            except psycopg2.Error as e:
+            except psycopg.Error as e:
                 messagebox.showerror("Error de Privilegios / SQL", str(e.pgerror))
 
         tk.Button(
@@ -307,5 +307,5 @@ class DashboardView(ttk.Frame):
                 DatabaseManager.anular_matricula_logico(self.credenciales, id_matri)
                 messagebox.showinfo("Borrado Lógico Completado", f"El expediente {id_matri} fue marcado como 'Anulado'.")
                 self.cargar_datos()
-            except psycopg2.Error as e:
+            except psycopg.Error as e:
                 messagebox.showerror("Error de Integridad / Privilegios", f"No se pudo anular el registro:\n{e.pgerror}")
