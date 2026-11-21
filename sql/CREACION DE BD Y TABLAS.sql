@@ -1,0 +1,133 @@
+CREATE DATABASE matricore;
+
+CREATE TABLE ESTUDIANTE (
+    DNI VARCHAR(8) PRIMARY KEY,
+    Nombre VARCHAR(60) NOT NULL,
+    Apellido_Pat VARCHAR(40) NOT NULL,
+    Apellido_Mat VARCHAR(40) NOT NULL,
+    Fecha_nac DATE NOT NULL
+);
+
+CREATE TABLE APODERADO (
+    DNI_Apod VARCHAR(8) PRIMARY KEY,
+    Nombre VARCHAR(60) NOT NULL,
+    Apellido_Pat VARCHAR(40) NOT NULL,
+    Apellido_Mat VARCHAR(40) NOT NULL,
+    Ocupacion VARCHAR(60),
+    Correo VARCHAR(100) NOT NULL,
+    Correo_verificado CHAR(2) DEFAULT 'No'
+);
+
+CREATE TABLE DESTINATARIO (
+    DNI_destinatario VARCHAR(8) PRIMARY KEY,
+    Destinatario VARCHAR(100) NOT NULL,
+    Correo_destinatario VARCHAR(100)
+);
+
+CREATE TABLE HOGAR (
+    DNI_Apod VARCHAR(8) PRIMARY KEY,
+    Calle VARCHAR(100) NOT NULL,
+    Numero_vivienda VARCHAR(10) NOT NULL,
+    Distrito VARCHAR(50) NOT NULL,
+    Referencias VARCHAR(200),
+    FOREIGN KEY (DNI_Apod) REFERENCES APODERADO(DNI_Apod)
+);
+
+CREATE TABLE REPRESENTA (
+    DNI_est VARCHAR(8),
+    DNI_Apod VARCHAR(8),
+    Parentesco VARCHAR(20),
+    PRIMARY KEY (DNI_est, DNI_Apod),
+    FOREIGN KEY (DNI_est) REFERENCES ESTUDIANTE(DNI),
+    FOREIGN KEY (DNI_Apod) REFERENCES APODERADO(DNI_Apod)
+);
+
+CREATE TABLE TELEFONO_APODERADO (
+    DNI_Apod VARCHAR(8),
+    Telefono VARCHAR(9),
+    PRIMARY KEY (DNI_Apod, Telefono),
+    FOREIGN KEY (DNI_Apod) REFERENCES APODERADO(DNI_Apod)
+);
+
+CREATE TABLE FICHA_MEDICA (
+    DNI_est VARCHAR(8) PRIMARY KEY,
+    Grupo_sang VARCHAR(3),
+    Seguro VARCHAR(100),
+    Observaciones VARCHAR(300),
+    FOREIGN KEY (DNI_est) REFERENCES ESTUDIANTE(DNI)
+);
+
+CREATE TABLE TELEFONO_EMERGENCIA (
+    DNI_est VARCHAR(8),
+    Telefono_emer VARCHAR(9),
+    PRIMARY KEY (DNI_est, Telefono_emer),
+    FOREIGN KEY (DNI_est) REFERENCES FICHA_MEDICA(DNI_est)
+);
+
+CREATE TABLE ALERGIA (
+    DNI_est VARCHAR(8),
+    Alergia VARCHAR(100),
+    PRIMARY KEY (DNI_est, Alergia),
+    FOREIGN KEY (DNI_est) REFERENCES FICHA_MEDICA(DNI_est)
+);
+
+CREATE TABLE ENFERMEDAD (
+    DNI_est VARCHAR(8),
+    Enfermedad VARCHAR(100),
+    PRIMARY KEY (DNI_est, Enfermedad),
+    FOREIGN KEY (DNI_est) REFERENCES FICHA_MEDICA(DNI_est)
+);
+
+CREATE TABLE CONDICION_ESPECIAL (
+    DNI_est VARCHAR(8),
+    Condicion VARCHAR(100),
+    PRIMARY KEY (DNI_est, Condicion),
+    FOREIGN KEY (DNI_est) REFERENCES FICHA_MEDICA(DNI_est)
+);
+
+CREATE TABLE PAGO_MATRICULA (
+    Nro_operacion VARCHAR(20) PRIMARY KEY,
+    DNI_Apod VARCHAR(8) NOT NULL,
+    Monto DECIMAL(8,2) NOT NULL CHECK (Monto > 0),
+    Estado_pago VARCHAR(10) DEFAULT 'Pendiente',
+    Medio_pago VARCHAR(20) NOT NULL,
+    Fecha_pago DATE NOT NULL,
+    FOREIGN KEY (DNI_Apod) REFERENCES APODERADO(DNI_Apod)
+);
+
+CREATE TABLE MATRICULA (
+    ID_Matri VARCHAR(15) PRIMARY KEY,
+    DNI_est VARCHAR(8) NOT NULL,
+    Nro_operacion VARCHAR(20) NOT NULL,
+    Anio_academico INT NOT NULL,
+    Grado_matricular VARCHAR(30) NOT NULL,
+    Estado_matri VARCHAR(15) NOT NULL,
+    Fecha_matri DATE NOT NULL,
+    FOREIGN KEY (DNI_est) REFERENCES ESTUDIANTE(DNI),
+    FOREIGN KEY (Nro_operacion) REFERENCES PAGO_MATRICULA(Nro_operacion)
+);
+
+CREATE TABLE BOLETA_ELECTRONICA (
+    ID_boleta SERIAL,
+    Serie VARCHAR(4),
+    Nro_operacion VARCHAR(20) NOT NULL,
+    DNI_destinatario VARCHAR(8) NOT NULL,
+    RUC_colegio VARCHAR(11) DEFAULT '20121231833',
+    Fecha_emision DATE NOT NULL,
+    Tipo_de_servicio VARCHAR(30) NOT NULL,
+    PRIMARY KEY (ID_boleta, Serie),
+    FOREIGN KEY (Nro_operacion) REFERENCES PAGO_MATRICULA(Nro_operacion),
+    FOREIGN KEY (DNI_destinatario) REFERENCES DESTINATARIO(DNI_destinatario)
+);
+
+CREATE TABLE AUTORIZACION (
+    ID_Matri VARCHAR(15),
+    ID_Aut VARCHAR(10),
+    DNI_Apod VARCHAR(8) NOT NULL,
+    Tipo VARCHAR(30) NOT NULL,
+    Fecha_aut DATE NOT NULL,
+    Estado_aut VARCHAR(15) DEFAULT 'Pendiente',
+    PRIMARY KEY (ID_Matri, ID_Aut),
+    FOREIGN KEY (ID_Matri) REFERENCES MATRICULA(ID_Matri),
+    FOREIGN KEY (DNI_Apod) REFERENCES APODERADO(DNI_Apod)
+);
