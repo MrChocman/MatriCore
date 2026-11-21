@@ -1,0 +1,20 @@
+# Archivos compilados y empaquetados
+build/
+dist/
+*.spec
+*.exe
+
+# Caché de Python
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Entornos virtuales
+venv/
+.venv/
+env/
+
+# Configuración local de VS Code y sistema operativo
+.vscode/
+.DS_Store
+Thumbs.db
